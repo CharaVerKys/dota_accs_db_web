@@ -1,0 +1,90 @@
+@import "./blocks/header";
+
+#alert{
+    text-align: center;
+    font-size: 24px;
+    color:#909090;
+}
+
+.form-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    border: 1px solid #999;
+    border-radius: 5px;
+    background-color: #474751;
+ 
+}
+.form-group {
+   
+    margin: 0 10px 15px 10px;
+}
+form{
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(301px,1fr));
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+.form-group input[type="text"],
+.form-group input[type="number"],
+.form-group select,
+.form-group input[type="date"] {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #999;
+    border-radius: 4px;
+    box-sizing: border-box;
+    background-color: #313137;
+    color:white;
+}
+
+#extra_inf_text{
+    grid-row: span 2;
+    textarea{
+        resize:none; 
+        width: 98.5%; /* Занимать всю доступную ширину */
+    height: 60%; /* Начальная высота области */
+    
+    border: 1px solid #999;
+    border-radius: 5px;
+    background-color: #313137;
+    color:white;
+    font-size: 14px;
+    }
+}
+#result{
+    text-align: center;
+    font-size: 28px;
+    color:#909090;
+}
+.form-group input[onclick="submitForm()"] {
+    background-color: #317b33;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    position: relative;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -24%);
+    
+}
+.form-group input[type="submit"]:hover {
+    background-color: #45a049;
+}
+
+
+
+
+input[type="number"] {
+    appearance: textfield; 
+}
+#contrib_t{
+grid-row: span 3;
+padding-left: 10%;
+}

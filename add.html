@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>add acc</title>
+    <link rel="stylesheet" href="/css/adder.css">
+    <title>Add acc</title>
+</head>
+
+<body>
+
+    <p id="alert">Проверяйте вводимые данные! <br>Изменить будет нельзя, только удалить!</p>
+
+    <div class="form-container">
+        <form id="myForm">
+            <div class="form-group">
+                <label for="active">Состояние:</label>
+                <select id="active" name="active">
+                    <option value="1">Active</option>
+                    <option value="0">InActive</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="mmr">рейтинг</label>
+                <input type="number" id="mmr" name="mmr">
+            </div>
+            <div class="form-group">
+                <label for="match">матчи</label>
+                <input type="number" id="match" name="match">
+            </div>
+            <div class="form-group">
+                <label for="behavior">поряда</label>
+                <input type="number" id="behavior" name="behavior">
+            </div>
+
+            <div class="form-group">
+                <label for="login">логин</label>
+                <input type="text" id="login" name="login">
+            </div>
+
+
+            <div class="form-group">
+                <label for="mmr_rate">уверенность</label>
+                <input type="number" id="mmr_rate" name="mmr_rate">
+            </div>
+            <div class="form-group">
+                <label for="cost">цена</label>
+                <input type="number" id="cost" name="cost">
+            </div>
+
+
+
+            <div class="form-group" id="extra_inf_text">
+                <label for="extra">доп инфа</label>
+                <textarea id="extra" name="extra"></textarea>
+            </div>
+
+            <div class="form-group" id="contrib_t">
+                <label><input type="checkbox" name="A"> anylvl
+                </label>
+                <label><input type="checkbox" name="C"> CDMgames
+                </label>
+                <label><input type="checkbox" name="F"> FunPay
+                </label>
+                <label><input type="checkbox" name="L"> I&L
+                </label>
+                <label><input type="checkbox" name="E"> Eldorado
+                </label>
+                <label><input type="checkbox" name="G"> G2G
+                </label>
+                <label><input type="checkbox" name="P"> PlayerAuctions
+                </label>
+                <label><input type="checkbox" name="N"> EpicNPC
+                </label>
+                <label><input type="checkbox" name="V"> IGV
+                </label>
+            </div>
+
+            <div class="form-group">
+                <label for="screenshot">screenshot (url)</label>
+                <input type="text" id="screenshot" name="screenshot">
+            </div>
+
+            <div class="form-group">
+                <label for="acc_id">айди ака</label>
+                <input type="number" id="acc_id" name="acc_id">
+            </div>
+
+            <div class="form-group">
+                <label for="provide_date">дата выставления</label>
+                <input type="date" id="provide_date" name="provide_date">
+            </div>
+            <div class="form-group">
+                <label for="create_date">дата создания ака</label>
+                <input type="date" id="create_date" name="create_date">
+            </div>
+
+
+
+            <div class="form-group">
+                <input type="button" id="submitButton" onclick="submitForm()" value="Добавить в базу данных">
+            </div>
+
+        </form>
+    </div>
+
+
+    <div id="result"></div>
+
+    <script src="/js/adder.js"></script>
+</body>
+
+</html>

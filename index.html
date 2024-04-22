@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SkiesGames</title>
+    <link rel="stylesheet" href="/css/index.css">
+    <script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
+</head>
+
+<body>
+
+
+    <header>
+        <img id="logo" alt="This img is logo (unavailable)"
+            src="https://cdn.discordapp.com/attachments/1018378882673557625/1210678330248925255/text.png?ex=65eb6f0f&is=65d8fa0f&hm=5065365c529d4cf004d051b92b6ed0898dcf7681abcbefc52b3a9072e133bcec&">
+    </header>
+    <main>
+        <div id="extra_container_tooltip" @click="closeToolTip">
+            <div id="tooltip" @click.stop="doNothing" :style="{ left: (mouseX-200) + 'px', top: (mouseY-40) + 'px' }">
+                <div class="button" @click="confirmDelete(tip_id)">удалить</div>
+                <!-- <div class="button">id: {{tip_id}}</div> -->
+                <div class="button" @click="change_active(tip_id)">сменить состояние</div>
+            </div>
+        </div>
+
+
+
+
+        <div id="extra_container" @click="closeExtraInfo">
+
+            <div id="mask" @click.stop="doNothing">
+              <div id="mask_mask"> <span>расшифровка маски:</span><br>
+                <span>{{contrib}}</span><br><br>
+            </div> 
+                <div style="text-align: left; padding-left: 15px;">
+                    <span>A = anylvl</span><br>
+                    <span>C = CDMgames</span><br>
+                    <span>F = FunPay</span><br>
+                    <span>L = I&L</span><br>
+                    <span>E = Eldorado</span><br>
+                    <span>G = G2G</span><br>
+                    <span>P = PlayerAuctions</span><br>
+                    <span>N = EpicNPC</span><br>
+                    <span>I = IGV</span>
+                </div>
+            </div>
+
+
+
+            <div id="extra_inf" @click.stop="doNothing">
+                <p>{{extra}}</p>
+                <div id="center_extra">
+                    <div id="sellers">
+                        
+
+                        <div style="text-align: left;  padding-left: 15px; ">
+                            <span>mmr: {{mmr}}<br>
+                            <span>матчей: {{match}}<br>
+                            <span>порядочность: {{behavior}}<br>
+                            <span>login: {{login}}<br>
+                            <span>уверенность: {{mmr_rate}}%<br>
+                            <span>цена: {{cost}} руб</span><br>
+                            <span>продаём у: {{contrib}}</span>
+                        </div>
+
+                    </div>
+
+                    <div id="second_data_and_screen">
+                        <img :src="screenshot">
+                        <p>Дата выставления:</p>
+                        <p>{{provide_date}}</p>
+                    </div>
+
+                </div>
+                <div id="foot_extra"> <span style="text-align: left;">{{acc_id}}</span><span style="text-align: right;">
+                        {{create_date}}</span></div>
+            </div>
+        </div>
+
+        <div id="app">
+
+            <div id="f_table">
+                <div><span @click="sortTable(1)">активен</span></div>
+                <div><span @click="sortTable(2)">рейтинг</span></div>
+                <div><span @click="sortTable(3)">матчи</span></div>
+                <div><span @click="sortTable(4)">поряда</span></div>
+                <div><span @click="sortTable(5)">логин</span></div>
+                <div><span @click="sortTable(6)">уверенность</span></div>
+                <div><span @click="sortTable(7)">цена</span></div>
+                <div><span @click="sortTable(8)">продаём</span></div>
+
+
+                <div></div>
+
+                <div><a class="link_add" href="/add">добавить</a></div>
+
+                <div class="nogrid" v-for="item in sortedItems" :key="item.id">
+                    <div v-if="column !== 'id'" v-for="(column, index) in columns" :key="index"
+                        :class="{'block_login': column === 'login'}">{{ item[column] }}</div>
+                    <div class="extra_t" @click="showExtraInfo(item.id)">доп инф</div>
+                    <div class="extra_t" @mousemove="handleMouseMove" @click="showTooltip(item.id)">управление</div>
+                </div>
+
+
+
+            </div>
+        </div>
+
+        <script>
+            /* ['состояние', 'рейтинг', 'матчи', 'поряда',  'логин', 'уверенность', 'цена', 'продаём'].reverse().forEach((e, i)=>{
+             i = (i == 1) ? 2 : i;
+             let el = document.createElement('div');
+             el.innerHTML=`<span @click="sortTable(${i})">${e}</span>`;
+             document.getElementById('f_table').prepend(el);
+           });
+           использует старый набор индексов
+           */
+        </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    </main>
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <script>
+
+        var main_table = new Vue({
+            el: '#app',
+            data: {
+                mouseX: 0,
+                mouseY: 0,
+
+
+                sortway: false,
+                selectedColumnIndex: 0, // Индекс выбранного столбца для сортировки
+                items: [],
+
+                columns: ['id', 'active', 'mmr', 'match', 'behavior', 'login', 'mmr_rate', 'cost', 'contrib']
+                // Названия столбцов
+            },
+            computed: {
+                sortedItems: function () {
+                    const column = this.columns[this.selectedColumnIndex];
+
+                    if (this.sortway) {
+                        return this.items.slice().sort((a, b) => {
+                            if (a[column] < b[column]) return -1;
+                            if (a[column] > b[column]) return 1;
+                            return 0;
+                        });
+                    } else {
+                        return this.items.slice().sort((a, b) => {
+                            if (a[column] > b[column]) return -1;
+                            if (a[column] < b[column]) return 1;
+                            return 0;
+                        });
+                    }
+
+
+                }
+            },
+            created() {
+                this.initTable();
+            },
+
+            methods: {
+                handleMouseMove(event) {
+                    this.mouseX = event.clientX;
+                    this.mouseY = event.clientY;
+
+                },
+
+                showTooltip(id) {
+
+                    tooltip.mouseX = this.mouseX;
+                    tooltip.mouseY = this.mouseY;
+                    tooltip.tip_id = id;
+
+                },
+
+                initTable() {
+                    fetch('http://charaverk.ru:3000/table')
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.log && data.log === "notlogged") {
+                                // Выполнить редирект на /login/
+
+                                window.location.href = '/login';
+                                return;
+
+                            }
+                            this.items = data;
+
+                        })
+                        .catch(error => {
+                            console.error('Ошибка при получении данных:', error);
+
+                        });
+                },
+
+                sortTable: function (index) {
+                    this.selectedColumnIndex = index;
+                    this.sortway = !this.sortway;
+                },
+                //тут потому что не работает иначе
+                showExtraInfo(id) {
+                    v_extra_show.getExtraInfo(id);
+                    document.getElementById('extra_container').style.display = 'block';
+                },
+
+            }
+
+
+
+        });
+    </script>
+
+
+
+
+
+
+
+
+
+    <script>
+        var v_extra_show = new Vue({
+            el: '#extra_container',
+            data: {
+                extra: null,
+                screenshot: null,
+                create_date: null,
+                provide_date: null,
+                acc_id: null,
+                contrib: null,
+                mmr: null,
+                match: null,
+                behavior: null,
+                login: null,
+                mmr_rate: null,
+                cost: null,
+
+            },
+            methods: {
+                getExtraInfo(id) {
+                    //    описание логики запроса с дб
+                    const requestOptions = {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ id: id })
+                    };
+                    fetch('http://charaverk.ru:3000/extra', requestOptions)
+                        .then(response => response.json())
+                        .then(data => {
+                            this.mmr = data[0].mmr;
+                            this.match = data[0].match;
+                            this.behavior = data[0].behavior;
+                            this.login = data[0].login;
+                            this.mmr_rate = data[0].mmr_rate;
+                            this.cost = data[0].cost;
+
+
+                            this.extra = data[0].extra;
+                            this.screenshot = data[0].screenshot;
+                            this.acc_id = data[0].acc_id;
+                            this.provide_date = data[0].provide_date.substring(0, 10);
+                            this.create_date = data[0].create_date.substring(0, 10);
+                            this.contrib = data[0].contrib;
+                        }
+
+
+                        )
+                        .catch(error => {
+                            console.error('Ошибка при получении данных:', error);
+
+                        });
+                },
+                closeExtraInfo() {
+                    document.getElementById('extra_container').style.display = 'none';
+                },
+                doNothing() { }
+
+            }
+
+
+        });
+    </script>
+    <script>
+        var tooltip = new Vue({
+            el: '#extra_container_tooltip',
+            data: {
+                tip_id: 0,
+                mouseX: 0,
+                mouseY: 0,
+
+            },
+            watch: {
+                mouseX() {
+                    document.getElementById('extra_container_tooltip').style.display = 'block';
+
+                }
+            },
+
+            methods: {
+
+
+                confirmDelete(id) {
+                    if (confirm("Вы уверены, что хотите удалить этот элемент?")) {
+                        this.deleteById(id);
+                    }
+                },
+
+                deleteById(id) {
+                    //    описание логики запроса с дб
+                    const requestOptions = {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ id: id })
+                    };
+                    document.getElementById('extra_container_tooltip').style.display = 'none';
+
+                    fetch('http://charaverk.ru:3000/delete', requestOptions)
+                        .then(response => response.json())
+                        .then(data => {
+
+                            if (data.log && data.log === "notlogged") {
+                                // Выполнить редирект на /login/
+
+                                window.location.href = '/login';
+                                return;
+
+                            }
+
+                        }
+
+
+                        )
+                        .catch(error => {
+                            console.error('Ошибка при получении данных:', error);
+
+                        });
+
+
+
+                    const index = main_table.items.findIndex(item => item.id === id);
+                    if (index !== -1) {
+                        main_table.items.splice(index, 1); // Удаляем элемент из массива
+                    }
+                },
+                change_active(id) {
+
+
+                    const requestOptions = {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ id: id })
+                    };
+                    document.getElementById('extra_container_tooltip').style.display = 'none';
+
+                    fetch('http://charaverk.ru:3000/changeActive', requestOptions)
+                        .then(response => response.json())
+                        .then(data => {
+
+                            if (data.log && data.log === "notlogged") {
+                                // Выполнить редирект на /login/
+
+                                window.location.href = '/login';
+                                return;
+
+                            }
+                        }
+
+
+                        )
+                        .catch(error => {
+                            console.error('Ошибка при получении данных:', error);
+
+                        });
+                    const index = main_table.items.findIndex(item => item.id === id);
+                    if (index !== -1) {
+                        // Заменяем значение свойства active
+                        main_table.items[index].active = !main_table.items[index].active;
+                    }
+                },
+                closeToolTip() {
+                    document.getElementById('extra_container_tooltip').style.display = 'none';
+                },
+                doNothing() { }
+
+            },
+        });
+
+    </script>
+</body>
+
+</html>
