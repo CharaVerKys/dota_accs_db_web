@@ -13,5 +13,5 @@ request install:
 * postgress
 * node.js
 * nginx
-* 
+
 also you will need to update BD data шт сщву and other all.. as i said before this app is uncomplete and had big mistakes (not for end project but to change code and develope new things)
